@@ -45,3 +45,56 @@ def find_contact(book:list):
                     break  
     except Exception as e:
         print("Viga", e)
+
+def kustuta_kontakt(book:list):
+  o=0
+  for e in book:
+        o=str(o)
+        print(o+"."+" ",end=" ")
+        print(e)
+        o=int(o)
+        o+=1
+  print()
+  v=int(input("Kirjuta number mida tahad kustutada"))
+  book.pop(v)
+
+def muuda_kontakti(book:list):
+    o=0
+    for e in book:
+        o=str(o)
+        print(o+"."+" ",end=" ")
+        print(e)
+        o=int(o)
+        o+=1
+    print()
+    v=int(input("Kirjuta number mida tahad muuta "))
+    while True:
+        try:
+            uus_est = input("Kirjuta nimi: ").strip().lower()
+            if uus_est.isalpha():
+                break
+            else:
+                print("Write a word")
+        except:
+            print("ERROR")
+    
+    while True:
+        try:
+            uus_rus = input("Kirjuta emaili: ").strip().lower()
+            if uus_est.isalpha():
+                break
+            else:
+                print("Write a word")
+        except:
+            print("ERROR")
+    
+    while True:
+        try:
+            uus_eng = input("Kirjuta numbri: ").strip().lower()
+            if uus_est.isalpha():
+                break
+            else:
+                print("Write a word")
+        except:
+            print("ERROR")
+    book.insert(v,{'est': uus_est, 'rus': uus_rus, 'eng': uus_eng})
