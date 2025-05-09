@@ -1,2 +1,4 @@
-{'nimi': 'u', 'email': 'uu', 'number': '777'}
-{'nimi': 'c', 'email': 'cc', 'number': '555'}
+{'nimi': 'ss', 'email': 'sss', 'number': 'sss'}
+{'nimi': 'qqq', 'email': 'qq', 'number': 'q'}
+{'nimi': '', 'email': '', 'number': ''}
+{'nimi': '', 'email': '', 'number': ''}

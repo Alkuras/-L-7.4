@@ -1,4 +1,14 @@
 #
+import ast
+def ast_read():
+    jarjend=[]
+    with open('kontakt.txt',encoding="utf8") as f: 
+        # data = f.read() 
+        # o=ast.literal_eval(data)
+        for rida in f:
+            rida=ast.literal_eval(rida)
+            jarjend.append(rida)
+    return jarjend
 def Loe_failist(fail:str)->list:
     f=open(fail,'r',encoding="utf8")
 
@@ -7,17 +17,12 @@ def Loe_failist(fail:str)->list:
         jarjend.append(rida.strip())
 
     f.close()
-    print(type(jarjend[0]))
+    print(jarjend)
     return jarjend
 
-def Kirjuta_failisse(fail:str,jarjend1:list,jarjend2:list,jarjend3:list):
-    
+def Kirjuta_failisse(fail:str,jarjend:list):
     f=open(fail,'w',encoding="utf8")
-    sõnastik=[]
-    for e, r, g in zip(jarjend1,jarjend2, jarjend3):
-        sõnastik.append({'nimi': e, 'email': r, 'number': g})
-
-    for line in sõnastik:
+    for line in jarjend:
         f.write(str(line)+"\n")
     f.close()
 
@@ -97,4 +102,4 @@ def muuda_kontakti(book:list):
                 print("Write a word")
         except:
             print("ERROR")
-    book.insert(v,{'est': uus_est, 'rus': uus_rus, 'eng': uus_eng})
+    book.insert(v,{'nimi': uus_est, 'email': uus_rus, 'number': uus_eng})
