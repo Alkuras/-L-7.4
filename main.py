@@ -1,3 +1,5 @@
+
+
 from functions import *
 from tkinter import *
 from tkinter import messagebox
@@ -6,68 +8,129 @@ def lisa_kontakt():
     nimi=e1.get()
     email=e2.get()
     number=e3.get()
+    if nimi.isalpha() and number.isnumeric():
+        if nimi and number and email:
+            lisa_kontaktt(book,nimi,email,number)
+            json_save(book)
+            messagebox.showinfo("Edu","Kontakt lisatud.")
+            e1.delete(0,"end")
+            e2.delete(0,"end")
+            e3.delete(0,"end")
+            kuva_kontakt()
+            book.append({'nimi': nimi, 'email': email, 'number': number})
+        else:
+            messagebox.showwarning("Tühjad väljad", "Täida kõik väljad.")
+
     
-    book.append({'nimi': nimi, 'email': email, 'number': number})
-    f=open("kontakt.txt",'w',encoding="utf8")
-    for line in book:
-        f.write(str(line)+"\n")
-    f.close()
-    print(book)
+    
+    
 def kuva_kontakt():
-    tekstikast.get(book)
-book=[]
-book=ast_read()
+    tekstikast.delete("1.0","end")
+    for kontakt in book:
+        nimi=kontakt["nimi"]
+        meil=kontakt["email"]
+        number=kontakt["number"]
+        tekstikast.insert("end", f"{nimi} | {meil} | {number}\n")
+
+def otsi_kontakt_gui():
+    nimi=e1.get()
+    tulemused=otsi_kontakt(book,nimi)
+    if tulemused:
+        kontakt=tulemused[0]
+        otsingu_viide.set(kontakt["nimi"])
+        e1.delete(0,"end")
+        e1.insert(0,kontakt["nimi"])
+        e2.delete(0,"end")
+        e2.insert(0,kontakt["email"])   
+        e3.delete(0,"end")
+        e3.insert(0,kontakt["number"])
+        tekstikast.delete("1.0","end")
+        nimi=kontakt["nimi"]
+        meil=kontakt["email"]
+        number=kontakt["number"]
+        tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
+    else:
+        messagebox.showinfo("Tulemus puudub", "Kontakt ei leitud.")
+
+def kustuta_kontakt_gui():
+    nimi = e1.get()
+    if kustuta_kontakt(book,nimi):
+        json_save(book)
+        messagebox.showinfo("Kustutatud", f"´{nimi}´ kusutati.")
+        kuva_kontakt()
+    else:
+        messagebox.showwarning("Ei leitud", "Kontakti ei leitud.")
+
+def sorteeri_gui():
+    kontaktid_sorted= sorteeri_kontaktid(book,"nimi")
+    tekstikast.delete("1.0","end")
+    for kontakt in kontaktid_sorted:
+        nimi=kontakt["nimi"]
+        meil=kontakt["email"]
+        number=kontakt["number"]
+        tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
+
+def muuda_kontakti_gui():
+    vana_nimi=otsingu_viide.get()
+
+    uus_nimi=e1.get()
+    uus_email=e2.get()
+    uus_number=e3.get()
+
+    if vana_nimi and uus_nimi and uus_number and uus_email:
+        õnnestus=muuda_kontakt(book,vana_nimi,uus_nimi,uus_email,uus_number,)
+        if õnnestus:
+            json_save(book)
+            messagebox.showinfo("Muudetud", f"´{vana_nimi}´ andmed on muudetud.")
+            kuva_kontakt()
+        else:
+            messagebox.showwarning("Tõrge", "Kontakti ei leitud muudatuseks.")
+    else:
+        messagebox.showwarning("Puuduvad andmed", "Palun täida kõik väljad.")
+book=json_read()
+
+
 
 
 aken=Tk()
 aken.title("Kontaktid")
-aken.geometry("600x400")
-aken.configure(bg="white")
-aken.resizable(width=True, height=True)
+aken.geometry("700x400")
+aken.configure(bg="orange")
+aken.resizable(width=False, height=False)
+otsingu_viide=StringVar()
+otsingu_viide.set("")
 aken.iconbitmap("catdog.ico")
-display=Label(aken,text="Tere tulemast kontakt raamatusse!",bg="white",fg="black",font=("Arial",15))
-# pealkiri=Label(aken,text="Tere tulemast kontakt raamatusse!",bg="orange",fg="brown",font=("Arial",20))
-# nupp1=Button(aken,text="Kontakte laadimine",bg="red",fg="white",font=("Arial",15),command=lambda: book=ast_read())
-# nupp2=Button(aken,text="Kontakte salvestamine",bg="red",fg="white",font=("Arial",15),command=lambda: Kirjuta_failisse("kontakt.txt",book))
-# nupp3=Button(aken,text="Uue kontakti lisamine.",bg="red",fg="white",font=("Arial",15),command=lambda: uus_kontakt(book))
-# nupp4=Button(aken,text="Kõigi kontaktide kuvamine.",bg="red",fg="white",font=("Arial",15),command=lambda: show_contacts(book))
-# nupp5=Button(aken,text="Kontakti otsimine nime järgi.",bg="red",fg="white",font=("Arial",15),command=lambda: find_contact(book))
-# nupp6=Button(aken,text="Kontakti kustutamine.",bg="red",fg="white",font=("Arial",15),command=lambda: kustuta_kontakt(book))
-# nupp7=Button(aken,text="Kontakti muutmine (kõik väljad: nimi, telefon, e-mail).",bg="red",fg="white",font=("Arial",15),command=lambda: muuda_kontakti(book))
-rida=Frame(aken)
 
-accept=Button(aken,text="Lisa kontakt",bg="red",fg="black",font=("Arial",15),command=lambda: lisa_kontakt())
-accept2=Button(aken,text="Kuva kontaktid",bg="red",fg="black",font=("Arial",15),command=lambda: kuva_kontakt())
-tekstikast =Text(aken, height=10, width=50)
-l1 = Label(aken, text = "Nimi:")
-l2 = Label(aken, text = "Email:")
-l3 = Label(aken, text= "Number: ")
-e1 = Entry(aken)
-e2 = Entry(aken)
-e3 = Entry(aken)
+nupp3=Button(aken,text="Sorteerimine nimi järgi.",bg="purple",fg="white",width=25,font=("Algerian",12),command=lambda: sorteeri_gui())
+nupp5=Button(aken,text="Kontakti otsimine nime järgi.",bg="purple",fg="white",width=25,font=("Algerian",12),command=lambda: otsi_kontakt_gui())
+nupp6=Button(aken,text="Kontakti kustutamine.",bg="brown",fg="white",width=25,font=("Algerian",12),command=lambda: kustuta_kontakt_gui())
+nupp7=Button(aken,text="Kontakti muutmine.",bg="brown",fg="white",width=25,font=("Algerian",12),command=lambda: muuda_kontakti_gui())
+accept=Button(aken,text="Lisa kontakt",bg="purple",fg="white",width=25,font=("Algerian",12),command=lambda: lisa_kontakt())
+accept2=Button(aken,text="Kuva kontaktid",bg="brown",fg="white",width=25,font=("Algerian",12),command=lambda: kuva_kontakt())
+tekstikast =Text(aken, height=15, width=40,bg="dark orange")
+l1 = Label(aken, text = "Nimi:",bg="orange")
+l2 = Label(aken, text = "Email:",bg="orange")
+l3 = Label(aken, text= "Number: ",bg="orange")
+e1 = Entry(aken,bg="dark orange")
+e2 = Entry(aken,bg="dark orange")
+e3 = Entry(aken,bg="dark orange")
+pilt=PhotoImage(file="catdoggg.png")
+pilt_label=Label(aken,image=pilt,bg="orange")
 
-
-# pealkiri.grid(row = 0, column = 0, sticky = W, pady = 2)
-# nupp2.grid(row = 1, column = 0, sticky = W, pady = 2)
-# nupp3.grid(row = 2, column = 0, sticky = W, pady = 2)
-# nupp4.grid(row = 3, column = 0, sticky = W, pady = 2)
-# nupp5.grid(row = 4, column = 0, sticky = W, pady = 2)
-# nupp6.grid(row = 5, column = 0, sticky = W, pady = 2)
-# nupp7.grid(row = 6, column = 0, sticky = W, pady = 2)
-l1.grid(row = 1, column = 0, sticky = W, pady = 2)
-l2.grid(row = 2, column = 0, sticky = W, pady = 2)
-l3.grid(row = 3, column = 0, sticky = W, pady = 2)
-e1.grid(row = 1, column = 1, pady = 2)
-e2.grid(row = 2, column = 1, pady = 2)
-e3.grid(row = 3, column = 1, pady = 2)
-accept.grid(row = 4,column = 2, pady=2)
-accept2.grid(row = 5,column = 2, pady=2)
-
-tekstikast.grid(row=5,pady =5, columnspan=2 )
-
-
-
-
+nupp3.grid(row = 6, column = 2, pady = 2)
+nupp6.grid(row = 5, column = 2, pady = 2)
+nupp5.grid(row = 4, column = 2, pady = 2)
+nupp7.grid(row = 7, column = 2, pady = 2)
+accept.grid(row = 2,column = 2, pady=2)
+accept2.grid(row = 3,column = 2, pady=2)
+pilt_label.grid(row= 8, column = 2, pady=3)
+l1.grid(row = 2, column = 0, sticky = W, pady = 2)
+l2.grid(row = 3, column = 0, sticky = W, pady = 2)
+l3.grid(row = 4, column = 0, sticky = W, pady = 2)
+e1.grid(row = 2, column = 1, pady = 2)
+e2.grid(row = 3, column = 1, pady = 2)
+e3.grid(row = 4, column = 1, pady = 2)
+tekstikast.grid(row=6,pady =5, columnspan=2,rowspan=10 )
 
 aken.mainloop()
 
@@ -96,7 +159,7 @@ aken.mainloop()
 
 
 
-
+# book=[]
 # while True:
 #     print("Tere tulemas menüüsse")
 #     v=int(input("""
@@ -125,10 +188,10 @@ aken.mainloop()
 #         p=int(input("Kontakte laadimine - 1.\nKontakte salvestamine - 2."))
 #         if p==1:
 #             #book=Loe_failist("kontakt.txt")
-#             book=ast_read()
+#             book=json_read()
 #             print(book)
 #         elif p==2:
-#             Kirjuta_failisse("kontakt.txt",book)
+#             json_save(book)
 #     elif v==2:
 #       uus_kontakt(book)
 #     elif v==3:

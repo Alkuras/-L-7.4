@@ -27,7 +27,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="catdog.ico" />
+    <Content Include="catdog.png" />
+    <Content Include="catdogg.png" />
+    <Content Include="catdoggg.png" />
     <Content Include="kontakt.txt" />
+    <Content Include="kontaktid.json" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
