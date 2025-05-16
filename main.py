@@ -1,5 +1,6 @@
 
 
+from tkinter.ttk import Combobox
 from functions import *
 from tkinter import *
 from tkinter import messagebox
@@ -33,25 +34,63 @@ def kuva_kontakt():
         tekstikast.insert("end", f"{nimi} | {meil} | {number}\n")
 
 def otsi_kontakt_gui():
-    nimi=e1.get()
-    tulemused=otsi_kontakt(book,nimi)
-    if tulemused:
-        kontakt=tulemused[0]
-        otsingu_viide.set(kontakt["nimi"])
-        e1.delete(0,"end")
-        e1.insert(0,kontakt["nimi"])
-        e2.delete(0,"end")
-        e2.insert(0,kontakt["email"])   
-        e3.delete(0,"end")
-        e3.insert(0,kontakt["number"])
-        tekstikast.delete("1.0","end")
-        nimi=kontakt["nimi"]
-        meil=kontakt["email"]
-        number=kontakt["number"]
-        tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
-    else:
-        messagebox.showinfo("Tulemus puudub", "Kontakt ei leitud.")
-
+    if searchchoosen.get()=="nimi":
+        nimi=e1.get()
+        tulemused=otsi_kontakt(book,nimi)
+        if tulemused:
+            kontakt=tulemused[0]
+            otsingu_viide.set(kontakt["nimi"])
+            e1.delete(0,"end")
+            e1.insert(0,kontakt["nimi"])
+            e2.delete(0,"end")
+            e2.insert(0,kontakt["email"])   
+            e3.delete(0,"end")
+            e3.insert(0,kontakt["number"])
+            tekstikast.delete("1.0","end")
+            nimi=kontakt["nimi"]
+            meil=kontakt["email"]
+            number=kontakt["number"]
+            tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
+        else:
+            messagebox.showinfo("Tulemus puudub", "Kontakt ei leitud.")
+    if searchchoosen.get()=="email":
+        email=e2.get()
+        tulemused=otsi_kontakt_e(book,email)
+        if tulemused:
+            kontakt=tulemused[0]
+            otsingu_viide.set(kontakt["email"])
+            e1.delete(0,"end")
+            e1.insert(0,kontakt["nimi"])
+            e2.delete(0,"end")
+            e2.insert(0,kontakt["email"])   
+            e3.delete(0,"end")
+            e3.insert(0,kontakt["number"])
+            tekstikast.delete("1.0","end")
+            nimi=kontakt["nimi"]
+            meil=kontakt["email"]
+            number=kontakt["number"]
+            tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
+        else:
+            messagebox.showinfo("Tulemus puudub", "Kontakt ei leitud.")
+    if searchchoosen.get()=="number":
+        number=e3.get()
+        tulemused=otsi_kontakt_n(book,number)
+        if tulemused:
+            kontakt=tulemused[0]
+            otsingu_viide.set(kontakt["number"])
+            e1.delete(0,"end")
+            e1.insert(0,kontakt["nimi"])
+            e2.delete(0,"end")
+            e2.insert(0,kontakt["email"])   
+            e3.delete(0,"end")
+            e3.insert(0,kontakt["number"])
+            tekstikast.delete("1.0","end")
+            nimi=kontakt["nimi"]
+            meil=kontakt["email"]
+            number=kontakt["number"]
+            tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
+        else:
+            messagebox.showinfo("Tulemus puudub", "Kontakt ei leitud.")
 def kustuta_kontakt_gui():
     nimi = e1.get()
     if kustuta_kontakt(book,nimi):
@@ -62,13 +101,32 @@ def kustuta_kontakt_gui():
         messagebox.showwarning("Ei leitud", "Kontakti ei leitud.")
 
 def sorteeri_gui():
-    kontaktid_sorted= sorteeri_kontaktid(book,"nimi")
-    tekstikast.delete("1.0","end")
-    for kontakt in kontaktid_sorted:
-        nimi=kontakt["nimi"]
-        meil=kontakt["email"]
-        number=kontakt["number"]
-        tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
+    
+    if sortchoosen.get()=="nimi":
+
+        kontaktid_sorted= sorteeri_kontaktid(book,"nimi")
+        tekstikast.delete("1.0","end")
+        for kontakt in kontaktid_sorted:
+            nimi=kontakt["nimi"]
+            meil=kontakt["email"]
+            number=kontakt["number"]
+            tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
+    elif sortchoosen.get()=="email":
+        kontaktid_sorted= sorteeri_kontaktid(book,"email")
+        tekstikast.delete("1.0","end")
+        for kontakt in kontaktid_sorted:
+            nimi=kontakt["nimi"]
+            meil=kontakt["email"]
+            number=kontakt["number"]
+            tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
+    elif sortchoosen.get()=="number":
+        kontaktid_sorted= sorteeri_kontaktid(book,"number")
+        tekstikast.delete("1.0","end")
+        for kontakt in kontaktid_sorted:
+            nimi=kontakt["nimi"]
+            meil=kontakt["email"]
+            number=kontakt["number"]
+            tekstikast.insert("end",f"Leitud: {nimi} | {meil} | {number}\n")
 
 def muuda_kontakti_gui():
     vana_nimi=otsingu_viide.get()
@@ -87,6 +145,17 @@ def muuda_kontakti_gui():
             messagebox.showwarning("Tõrge", "Kontakti ei leitud muudatuseks.")
     else:
         messagebox.showwarning("Puuduvad andmed", "Palun täida kõik väljad.")
+
+def puhasta_faili():
+    if messagebox.askokcancel("Kindel?", "Tahate jatkata?"):
+        e1.delete(0,"end")
+        e2.delete(0,"end")
+        e3.delete(0,"end")
+        tekstikast.delete("1.0","end")        
+        book.clear
+        json_del()
+    else:
+        messagebox.showinfo("Olgu","Kurb")
 book=json_read()
 
 
@@ -94,19 +163,20 @@ book=json_read()
 
 aken=Tk()
 aken.title("Kontaktid")
-aken.geometry("700x400")
+aken.geometry("720x400")
 aken.configure(bg="orange")
 aken.resizable(width=False, height=False)
 otsingu_viide=StringVar()
 otsingu_viide.set("")
 aken.iconbitmap("catdog.ico")
 
-nupp3=Button(aken,text="Sorteerimine nimi järgi.",bg="purple",fg="white",width=25,font=("Algerian",12),command=lambda: sorteeri_gui())
-nupp5=Button(aken,text="Kontakti otsimine nime järgi.",bg="purple",fg="white",width=25,font=("Algerian",12),command=lambda: otsi_kontakt_gui())
+delete=Button(aken,text="Täielik kustutamine",bg="brown",fg="white",width=25,font=("Algerian",12),command=lambda: puhasta_faili())
+nupp3=Button(aken,text="Sorteerimine.",bg="purple",fg="white",width=25,font=("Algerian",12),command=lambda: sorteeri_gui())
+nupp5=Button(aken,text="Kontakti otsimine.",bg="purple",fg="white",width=25,font=("Algerian",12),command=lambda: otsi_kontakt_gui())
 nupp6=Button(aken,text="Kontakti kustutamine.",bg="brown",fg="white",width=25,font=("Algerian",12),command=lambda: kustuta_kontakt_gui())
 nupp7=Button(aken,text="Kontakti muutmine.",bg="brown",fg="white",width=25,font=("Algerian",12),command=lambda: muuda_kontakti_gui())
 accept=Button(aken,text="Lisa kontakt",bg="purple",fg="white",width=25,font=("Algerian",12),command=lambda: lisa_kontakt())
-accept2=Button(aken,text="Kuva kontaktid",bg="brown",fg="white",width=25,font=("Algerian",12),command=lambda: kuva_kontakt())
+accept2=Button(aken,text="Kuva kontaktid",bg="orange",fg="white",width=25,font=("Algerian",12),command=lambda: kuva_kontakt())
 tekstikast =Text(aken, height=15, width=40,bg="dark orange")
 l1 = Label(aken, text = "Nimi:",bg="orange")
 l2 = Label(aken, text = "Email:",bg="orange")
@@ -116,13 +186,28 @@ e2 = Entry(aken,bg="dark orange")
 e3 = Entry(aken,bg="dark orange")
 pilt=PhotoImage(file="catdoggg.png")
 pilt_label=Label(aken,image=pilt,bg="orange")
+l4 = Label(aken, text= "Sort. ",bg="orange")
+e4 = Entry(aken,bg="dark orange")
+n = StringVar()
+sortchoosen =Combobox(aken, width =7,background="orange",font="Algerian",
+                            textvariable = n)
+sortchoosen['values']  = ('nimi','email','number')
+sortchoosen.grid(column = 3, row = 6)
+sortchoosen.current(0) 
 
-nupp3.grid(row = 6, column = 2, pady = 2)
+searchchoosen =Combobox(aken, width =7,background="orange",font="Algerian",
+                            textvariable = n)
+searchchoosen['values']  = ('nimi','email','number')
+searchchoosen.grid(column = 3, row = 4)
+searchchoosen.current(0) 
+
+delete.grid(row=7,column=2,pady=2)
+nupp3.grid(row = 6, column = 2, pady = 1)
 nupp6.grid(row = 5, column = 2, pady = 2)
 nupp5.grid(row = 4, column = 2, pady = 2)
-nupp7.grid(row = 7, column = 2, pady = 2)
+nupp7.grid(row = 3, column = 2, pady = 2)
 accept.grid(row = 2,column = 2, pady=2)
-accept2.grid(row = 3,column = 2, pady=2)
+accept2.grid(row = 5,column = 1, pady=2)
 pilt_label.grid(row= 8, column = 2, pady=3)
 l1.grid(row = 2, column = 0, sticky = W, pady = 2)
 l2.grid(row = 3, column = 0, sticky = W, pady = 2)

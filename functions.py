@@ -5,6 +5,10 @@ import os
 
 faili_nimi="kontaktid.json"
 
+def json_del():
+    open(faili_nimi, 'w').close()
+    with open(faili_nimi, "w", encoding="utf-8") as f:
+        json.dump([],f)
 
 def json_read():
     if not os.path.exists(faili_nimi):
@@ -22,6 +26,12 @@ def lisa_kontaktt(kontaktid,nimi,email,number):
 
 def otsi_kontakt(kontaktid, nimi):
     return[k for k in kontaktid if nimi.lower() in k["nimi"].lower()]
+
+def otsi_kontakt_e(kontaktid, email):
+    return[k for k in kontaktid if email.lower() in k["email"].lower()]
+
+def otsi_kontakt_n(kontaktid, number):
+    return[k for k in kontaktid if number.lower() in k["number"].lower()]
 
 def kustuta_kontakt(kontaktid, nimi):
     leitud = [k for k in kontaktid if k["nimi"].lower() == nimi.lower()]
